@@ -1,0 +1,191 @@
+:root {
+    /* Paleta de colores extraída del wireframe */
+    --color-1: #7161ef; /* Morado Oscuro */
+    --color-2: #957fef; /* Morado Medio */
+    --color-3: #b79ced; /* Morado Claro */
+    --color-4: #dec0f1; /* Morado Muy Claro */
+    --color-5: #efd9ce; /* Arena / Fondo principal */
+}
+
+body {
+    background-color: var(--color-5);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding-bottom: 70px; /* Espacio reservado para la navegación móvil fija en el fondo */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-bottom: 0;
+    }
+}
+
+/* Colores de Header y Footer */
+.header-top, .mobile-header {
+    background-color: var(--color-3);
+}
+
+.header-nav {
+    background-color: var(--color-4);
+}
+
+.footer-bar {
+    background-color: var(--color-3);
+}
+
+/* Componentes Comunes */
+.logo-box {
+    background-color: var(--color-1);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.search-bar-wrapper {
+    position: relative;
+}
+
+.search-bar-wrapper .form-control {
+    padding-right: 2.5rem;
+    border: none;
+}
+
+.search-bar-wrapper .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(113, 97, 239, 0.25);
+}
+
+.search-bar-wrapper .bi-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-1);
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.header-icons i {
+    color: var(--color-1);
+}
+
+/* Sección Hero */
+.hero-banner {
+    background-color: var(--color-1);
+    border-radius: 12px;
+    min-height: 220px;
+    height: 100%;
+    width: 100%;
+}
+
+/* Tarjetas de Producto */
+.section-title {
+    color: #333;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.25rem;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-2) rgba(255,255,255,0.3);
+}
+
+.scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: var(--color-2);
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
+
+.product-card {
+    background-color: var(--color-1);
+    color: white;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 160px;
+    max-width: 160px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    border: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+.product-img-wrapper {
+    background-color: var(--color-5);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-img-wrapper img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product-card h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.product-card small {
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+/* Navegación Móvil Inferior */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-3);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    z-index: 1030;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.mobile-bottom-nav i {
+    font-size: 1.6rem;
+    color: var(--color-1);
+}
+
+/* Estilos de Modal */
+.modal-content {
+    background-color: var(--color-5);
+}
+.modal-header {
+    border-bottom: 2px solid var(--color-2);
+}
+.modal-footer {
+    border-top: 2px solid var(--color-2);
+}
+.badge-disponibilidad {
+    background-color: var(--color-1);
+}
