@@ -1,7 +1,7 @@
 import { initStoreModule } from "./storeModule.js";
 
-function initApplication(){
-    initStoreModule()
+async function initApplication(){
+    await initStoreModule()
 }
 
 document.addEventListener('DOMContentLoaded', initApplication)
