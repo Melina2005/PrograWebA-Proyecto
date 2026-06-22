@@ -1,7 +1,7 @@
-const URL = "./productos.json";
+const URL = "../db/productos.json";
 let productosGlobales = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+export const initStoreModule = () => {
     // Referencias a los inputs de búsqueda
     const inputBuscadorDesktop = document.getElementById('buscador-desktop');
     const inputBuscadorMobile = document.getElementById('buscador-mobile');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Eventos de búsqueda
     if(inputBuscadorDesktop) inputBuscadorDesktop.addEventListener('input', manejarBusqueda);
     if(inputBuscadorMobile) inputBuscadorMobile.addEventListener('input', manejarBusqueda);
-});
+};
 
 // Filtra las secciones para inyectar a cada contenedor correspondiente
 function renderizarSecciones(productos) {
