@@ -393,7 +393,10 @@
        style="display:none;fill:none;fill-opacity:1;stroke:none;stroke-opacity:1" /><g
        id="g7"
        inkscape:label="WomanlyFIgure"
-       style="display:inline"><path
+       style="display:inline"
+       inkscape:export-filename="LogoDCVertical.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><path
          style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-dasharray:none;stroke-opacity:1"
          d="m 69.6132,145.69956 c 0.263562,2.79375 0.210513,4.45168 1.20494,5.34514 3.423063,5.52897 -2.142057,3.90228 -1.15903,9.23858 l 23.291117,5.26423 1.442456,-1.18154 c 0.392408,-0.57621 1.436856,-2.19733 -0.432462,-3.16451 -0.814766,-0.3657 -3.307235,-0.54359 -1.518097,-3.18301 0.994096,-1.50555 -0.308329,-3.05578 -3.807336,-4.1281 -1.434628,-0.34856 -3.599389,-0.70371 -2.736923,-4.23321 l 2.308441,-4.86046 z"
          id="path28"
@@ -469,7 +472,10 @@
          id="path42"
          sodipodi:nodetypes="cccscc" /></g><g
        id="g64"
-       transform="translate(43.975788,-91.499641)"><text
+       transform="translate(43.975788,-91.499641)"
+       inkscape:export-filename="LogoDCHorizontal.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Castellar;-inkscape-font-specification:'Castellar, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0.267229px;word-spacing:-0.00264583px;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-dasharray:none;stroke-opacity:1"
          x="49.783775"
@@ -493,7 +499,10 @@
        id="g84"
        inkscape:label="WomanlyFIgure"
        transform="translate(90.842578,10.47343)"
-       style="display:inline"><path
+       style="display:inline"
+       inkscape:export-filename="logoCompactoHorizontal.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><path
          id="path124"
          style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-dasharray:none;stroke-opacity:1"
          inkscape:label="Hair"
@@ -547,7 +556,10 @@
        id="g131"
        inkscape:label="WomanlyFIgure"
        transform="translate(90.669445,55.31496)"
-       style="display:inline"><path
+       style="display:inline"
+       inkscape:export-filename="LogComp.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><path
          id="path125"
          style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-dasharray:none;stroke-opacity:1"
          inkscape:label="Hair"
