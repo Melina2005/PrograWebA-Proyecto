@@ -30,7 +30,7 @@ body {
 
 /* Componentes Comunes */
 .logo-box {
-    background-color: var(--color-1);
+    background-color: none;
     color: white;
     padding: 8px 20px;
     border-radius: 4px;
