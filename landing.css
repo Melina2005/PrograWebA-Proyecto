@@ -1,0 +1,75 @@
+
+:root{
+    --color-1: #7161ef;
+    --color-2: #957fef;
+    --color-3: #b79ced;
+    --color-4: #dec0f1;
+    --color-5: #ffffff;
+}
+
+body{
+    background-color: var(--color-5);
+    font-family: system-ui, sans-serif;
+}
+
+.landing-header{
+    background: linear-gradient(
+        135deg,
+        var(--color-3),
+        var(--color-2)
+    );
+
+    color: white;
+    padding: 100px 20px;
+}
+
+.landing-logo{
+    width: 140px;
+    height: auto;
+}
+
+.info-section{
+    background-color: white;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.info-section h2{
+    color: var(--color-1);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.value-card{
+    background-color: var(--color-4);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.value-card:hover{
+    transform: translateY(-5px);
+}
+
+.team-list{
+    list-style: none;
+    padding: 0;
+}
+
+.team-list li{
+    background-color: var(--color-4);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.landing-footer{
+    background-color: var(--color-3);
+    padding: 25px;
+    margin-top: 40px;
+}
+
