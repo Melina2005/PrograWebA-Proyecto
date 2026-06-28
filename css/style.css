@@ -38,6 +38,12 @@ body {
     display: inline-block;
 }
 
+.logo-img {
+   height:50px;
+   width:auto;
+   display:block;
+}
+
 .search-bar-wrapper {
     position: relative;
 }

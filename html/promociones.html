@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promociones | Distrito Cosmetico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+        <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="js/script.js" defer type="module"></script>
+</head>
+<body>
+
+    <header class="d-none d-lg-block">
+        <div class="header-top py-3">
+            <div class="container d-flex align-items-center">
+                <a href="index.html" class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético" class="logo-img"></a>
+                <h1 class="mb-0 fs-4 text-dark">Distrito Cosmetico</h1>
+                
+                <div class="mx-auto w-50 px-4">
+                    <div class="search-bar-wrapper">
+                        <input type="text" id="buscador-desktop" class="form-control rounded-pill" placeholder="Buscar...">
+                        <i class="bi bi-search"></i>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center fs-4 header-icons">
+                    <a href="carrito.html" class="text-decoration-none me-3"><i class="bi bi-cart3"></i></a>
+                    <a href="login.html" class="text-decoration-none"><i class="bi bi-person-circle"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="header-nav py-2">
+            <div class="container">
+                <ul class="nav justify-content-between">
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/landingPage.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/nuevos-productos.html">Nuevo</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/maquillaje.html">Maquillaje</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/skincare.html">Skincare</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/cabello.html">Cabello</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/fragancias.html">Fragancias</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/corporal.html">Corporal</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/promociones.html">Promociones</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <header class="d-lg-none mobile-header py-3 px-3 shadow-sm sticky-top ">
+        <div class="d-flex align-items-center gap-3">
+            <a href="html/index.html" class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético" class="logo-img"></a>
+            <div class="flex-grow-1 search-bar-wrapper">
+                <input type="text" id="buscador-mobile" class="form-control rounded-pill" placeholder="Buscar...">
+                <i class="bi bi-search"></i>
+            </div>
+            <button class="btn btn-link text-dark p-0 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvasMenu" aria-controls="mobileOffcanvasMenu">
+                <i class="bi bi-three-dots-vertical fs-2"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="mobileOffcanvasMenu" aria-labelledby="mobileOffcanvasMenuLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="mobileOffcanvasMenuLabel">Menú</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column fs-5 gap-3">
+                <li class="nav-item">
+                    <a class="nav-link text-dark px-0" href="html/index.html"><i class="bi bi-shop me-3"></i>Tienda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark px-0" href="html/categorias.html"><i class="bi bi-grid me-3"></i>Categorías</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark px-0" href="html/carrito.html"><i class="bi bi-cart3 me-3"></i>Carrito</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark px-0" href="html/login.html"><i class="bi bi-person-circle me-3"></i>Mi Cuenta</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <main class="container py-5">
+
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">
+                Promociones
+            </h1>
+
+            <p class="lead text-muted">
+                Aprovecha nuestras ofertas y descuentos especiales.
+            </p>
+        </div>
+
+        <div class="row g-4" id="productos-container">
+        </div>
+
+    </main>
+    <footer class="footer-bar py-4 mt-auto">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center text-center">
+            <p class="mb-3 mb-md-0 w-100 text-dark">© Copyright 2026 | Distrito Cosmetico | Todos los Derechos Reservados</p>
+            <div class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético"></div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header header-top text-dark">
+                    <h5 class="modal-title fw-bold" id="modal-titulo">Nombre del Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="product-img-wrapper mb-3 mx-auto" style="max-width: 200px; height: 200px;">
+                        <img id="modal-img" src="" alt="" class="img-fluid">
+                    </div>
+                    <span id="modal-categoria" class="badge bg-secondary mb-2">Categoria</span>
+                    <h3 id="modal-precio" class="text-primary fw-bold mb-3">₡0</h3>
+                    <p id="modal-descripcion" class="text-muted">Descripción</p>
+                    <span id="modal-disponibilidad" class="badge badge-disponibilidad p-2 px-3 rounded-pill mt-2">Disponible</span>
+                </div>
+                <div class="modal-footer footer-bar border-0 justify-content-center">
+                    <button type="button" class="btn btn-dark text-white rounded-pill px-4"><i class="bi bi-cart-plus me-2"></i>Agregar al carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

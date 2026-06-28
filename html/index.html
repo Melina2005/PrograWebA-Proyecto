@@ -17,7 +17,7 @@
     <header class="d-none d-lg-block">
         <div class="header-top py-3">
             <div class="container d-flex align-items-center">
-                <div class="logo-box me-3"><img src="data/brand/LogComp.svg"></div>
+                <a href="index.html" class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético" class="logo-img"></a>
                 <h1 class="mb-0 fs-4 text-dark">Distrito Cosmetico</h1>
                 
                 <div class="mx-auto w-50 px-4">
@@ -28,8 +28,8 @@
                 </div>
                 
                 <div class="d-flex align-items-center fs-4 header-icons">
-                    <a href="#" class="text-decoration-none me-3"><i class="bi bi-cart3"></i></a>
-                    <a href="#" class="text-decoration-none"><i class="bi bi-person-circle"></i></a>
+                    <a href="carrito.html" class="text-decoration-none me-3"><i class="bi bi-cart3"></i></a>
+                    <a href="login.html" class="text-decoration-none"><i class="bi bi-person-circle"></i></a>
                 </div>
             </div>
         </div>
@@ -37,15 +37,14 @@
         <nav class="header-nav py-2">
             <div class="container">
                 <ul class="nav justify-content-between">
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="landingPage.html">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Nuevo</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Maquillaje</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Skincare</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Cabello</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Fragancias</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Marcas</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Corporal</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark px-0" href="#">Promociones</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/landingPage.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/nuevos-productos.html">Nuevo</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/maquillaje.html">Maquillaje</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/skincare.html">Skincare</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/cabello.html">Cabello</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/fragancias.html">Fragancias</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/corporal.html">Corporal</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark px-0" href="html/promociones.html">Promociones</a></li>
                 </ul>
             </div>
         </nav>
@@ -53,7 +52,7 @@
 
     <header class="d-lg-none mobile-header py-3 px-3 shadow-sm sticky-top ">
         <div class="d-flex align-items-center gap-3">
-            <div class="logo-box">Logo</div>
+            <a href="html/index.html" class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético" class="logo-img"></a>
             <div class="flex-grow-1 search-bar-wrapper">
                 <input type="text" id="buscador-mobile" class="form-control rounded-pill" placeholder="Buscar...">
                 <i class="bi bi-search"></i>
@@ -72,16 +71,16 @@
         <div class="offcanvas-body">
             <ul class="nav flex-column fs-5 gap-3">
                 <li class="nav-item">
-                    <a class="nav-link text-dark px-0" href="#"><i class="bi bi-shop me-3"></i>Tienda</a>
+                    <a class="nav-link text-dark px-0" href="html/index.html"><i class="bi bi-shop me-3"></i>Tienda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark px-0" href="#"><i class="bi bi-grid me-3"></i>Categorías</a>
+                    <a class="nav-link text-dark px-0" href="html/categorias.html"><i class="bi bi-grid me-3"></i>Categorías</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark px-0" href="#"><i class="bi bi-cart3 me-3"></i>Carrito</a>
+                    <a class="nav-link text-dark px-0" href="html/carrito.html"><i class="bi bi-cart3 me-3"></i>Carrito</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark px-0" href="#"><i class="bi bi-person-circle me-3"></i>Mi Cuenta</a>
+                    <a class="nav-link text-dark px-0" href="html/login.html"><i class="bi bi-person-circle me-3"></i>Mi Cuenta</a>
                 </li>
             </ul>
         </div>
@@ -104,8 +103,9 @@
         <section class="mb-5">
             <div class="d-flex justify-content-between align-items-end mb-3">
                 <h2 class="section-title fs-4 mb-0">Más vendidos</h2>
-                <a href="#" class="text-decoration-none d-none d-lg-inline-flex align-items-center link-explorar">
-                    Explorar más <i class="bi bi-arrow-right-circle ms-2 fs-5"></i>
+                <a href="mas-vendidos.html" class="text-decoration-none d-none d-lg-inline-flex align-items-center link-explorar">
+                    Explorar más
+                    <i class="bi bi-arrow-right-circle ms-2 fs-5"></i>
                 </a>
             </div>
             <div class="scroll-container" id="mas-vendidos-container">
@@ -115,7 +115,7 @@
         <section class="mb-5">
             <div class="d-flex justify-content-between align-items-end mb-3">
                 <h2 class="section-title fs-4 mb-0">Nuevos Productos</h2>
-                <a href="#" class="text-decoration-none d-none d-lg-inline-flex align-items-center link-explorar">
+                <a href="nuevos-productos.html" class="text-decoration-none d-none d-lg-inline-flex align-items-center link-explorar">
                     Explorar más <i class="bi bi-arrow-right-circle ms-2 fs-5"></i>
                 </a>
             </div>
@@ -128,7 +128,7 @@
     <footer class="footer-bar py-4 mt-auto">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center text-center">
             <p class="mb-3 mb-md-0 w-100 text-dark">© Copyright 2026 | Distrito Cosmetico | Todos los Derechos Reservados</p>
-            <div class="logo-box">Logo</div>
+            <div class="logo-box me-3"><img src="data/brand/LogComp.svg" alt="Logo Distrito Cosmético"></div>
         </div>
     </footer>
 

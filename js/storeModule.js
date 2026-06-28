@@ -15,7 +15,65 @@ export async function initStoreModule() {
             throw new Error(`Error en la petición: ${res.status}`);
         }
         productosGlobales = await res.json();
-        renderizarSecciones(productosGlobales);
+
+        const pagina = window.location.pathname.split("/").pop();
+
+        if (document.getElementById('productos-container')) {
+
+            let productosFiltrados = [];
+
+            switch (pagina) {
+
+                case 'maquillaje.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.categoria === 'Maquillaje'
+                    );
+                    break;
+
+                case 'skincare.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.categoria === 'Skincare'
+                    );
+                    break;
+
+                case 'cabello.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.categoria === 'Cabello'
+                    );
+                    break;
+
+                case 'fragancias.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.categoria === 'Fragancias'
+                    );
+                    break;
+
+                case 'corporal.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.categoria === 'Corporal'
+                    );
+                    break;
+
+                case 'mas-vendidos.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.seccion === 'mas_vendidos'
+                    );
+                    break;
+
+                case 'nuevos-productos.html':
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.seccion === 'nuevos_productos'
+                    );
+                    break;
+            }
+
+            renderizarLista(productosFiltrados, 'productos-container');
+
+        } else {
+
+            renderizarSecciones(productosGlobales);
+
+        }
     } catch (error) {
         console.error("Hubo un error :", error);
         
@@ -61,6 +119,14 @@ function renderizarLista(lista, containerId) {
     const fragmento = document.createDocumentFragment();
 
     lista.forEach(producto => {
+        const wrapper = document.createElement('div');
+
+        if(containerId === 'productos-container'){
+            wrapper.className = 'col-md-4 col-lg-3';
+        }else{
+            wrapper.className = '';
+        }
+
         const card = document.createElement('article');
         card.className = 'product-card';
         card.onclick = () => abrirModal(producto);
@@ -68,13 +134,16 @@ function renderizarLista(lista, containerId) {
         const imgWrapper = document.createElement('div');
         imgWrapper.className = 'product-img-wrapper';
 
-        const img = document.createElement('img');
-        img.src = producto.imagen;
+      const img = document.createElement('img');
+
+        img.src = producto.imagen; // 👈 así directo
         img.alt = producto.nombre;
+
         img.onerror = (e) => {
             e.target.onerror = null;
             e.target.src = FALLBACK_URL;
         };
+
         imgWrapper.appendChild(img);
 
         const title = document.createElement('h6');
@@ -85,9 +154,21 @@ function renderizarLista(lista, containerId) {
         description.className = 'd-block text-truncate mb-auto';
         description.textContent = producto.descripcion;
 
-        card.append(imgWrapper, title, description);
-        fragmento.appendChild(card);
+        const price = document.createElement('p');
+        price.className = 'fw-bold mt-2 mb-1';
+        price.textContent = `₡${Number(producto.precio).toLocaleString('es-CR')}`;
+
+        card.append(imgWrapper, title, description, price);
+
+        if(containerId === 'productos-container'){
+            wrapper.appendChild(card);
+            fragmento.appendChild(wrapper);
+        }else{
+            fragmento.appendChild(card);
+        }
     });
+
+    
 
     container.appendChild(fragmento);
 }
@@ -116,33 +197,37 @@ function manejarBusqueda(evento) {
 
 function abrirModal(producto) {
     const imgModal = document.getElementById('modal-img');
+    const titulo = document.getElementById('modal-titulo');
+    const categoria = document.getElementById('modal-categoria');
+    const precio = document.getElementById('modal-precio');
+    const descripcion = document.getElementById('modal-descripcion');
+    const disponibilidad = document.getElementById('modal-disponibilidad');
+
     if (imgModal) {
         imgModal.src = producto.imagen;
-        imgModal.onerror = function () {
-            this.onerror = null;
-            this.src = FALLBACK_URL;
+        imgModal.onerror = () => {
+            imgModal.src = FALLBACK_URL;
         };
     }
 
-    const titulo = document.getElementById('modal-titulo');
     if (titulo) titulo.textContent = producto.nombre;
-
-    const categoria = document.getElementById('modal-categoria');
     if (categoria) categoria.textContent = producto.categoria;
 
-    const precio = document.getElementById('modal-precio');
-    if (precio) precio.textContent = `₡${producto.precio.toLocaleString('es-CR')}`;
-
-    const descripcion = document.getElementById('modal-descripcion');
-    if (descripcion) descripcion.textContent = producto.descripcion;
-
-    const disponibilidad = document.getElementById('modal-disponibilidad');
-    if (disponibilidad) {
-        disponibilidad.textContent = producto.disponible ? 'Disponible' : 'Agotado';
-        disponibilidad.className = `badge p-2 px-3 rounded-pill mt-2 ${producto.disponible ? 'badge-disponibilidad' : 'bg-danger'}`;
+    if (precio) {
+        precio.textContent = `₡${Number(producto.precio).toLocaleString('es-CR')}`;
     }
 
-    // Abrir Modal de Bootstrap
-    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+    if (descripcion) descripcion.textContent = producto.descripcion;
+
+    if (disponibilidad) {
+        disponibilidad.textContent = producto.disponible ? 'Disponible' : 'Agotado';
+        disponibilidad.className =
+            `badge p-2 px-3 rounded-pill mt-2 ${
+                producto.disponible ? 'badge-disponibilidad' : 'bg-danger'
+            }`;
+    }
+
+    const modalElement = document.getElementById('productModal');
+    const productModal = bootstrap.Modal.getOrCreateInstance(modalElement);
     productModal.show();
 }

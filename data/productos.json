@@ -5,7 +5,7 @@
     "categoria": "Skincare",
     "precio": 15000,
     "descripcion": "Sérum facial de hidratación profunda para todo tipo de piel, reduce líneas de expresión.",
-    "imagen": "img/serum.png",
+    "imagen": "img/serum.webp",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -15,7 +15,7 @@
     "categoria": "Maquillaje",
     "precio": 18500,
     "descripcion": "Base líquida de cobertura construible y acabado mate prolongado.",
-    "imagen": "img/base.png",
+    "imagen": "img/base.webp",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -25,7 +25,7 @@
     "categoria": "Maquillaje",
     "precio": 22000,
     "descripcion": "12 tonos de sombras altamente pigmentadas para un look de día y noche.",
-    "imagen": "img/paleta.png",
+    "imagen": "img/paleta.jpg",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -35,7 +35,7 @@
     "categoria": "Fragancias",
     "precio": 45000,
     "descripcion": "Fragancia de mujer con notas de jazmín y vainilla. Larga duración.",
-    "imagen": "img/perfume.png",
+    "imagen": "img/perfume.webp",
     "disponible": false,
     "seccion": "mas_vendidos"
   },
@@ -45,7 +45,7 @@
     "categoria": "Cabello",
     "precio": 12000,
     "descripcion": "Tratamiento intensivo para cabello seco y dañado con aceite de argán.",
-    "imagen": "img/mascarilla.png",
+    "imagen": "img/mascarilla.webp",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -55,7 +55,7 @@
     "categoria": "Maquillaje",
     "precio": 9500,
     "descripcion": "Labial líquido de textura suave y duración de hasta 24 horas.",
-    "imagen": "img/labial.png",
+    "imagen": "img/labial.avif",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -75,7 +75,7 @@
     "categoria": "Skincare",
     "precio": 16500,
     "descripcion": "Protector solar ligero, sin sensación grasosa, ideal para uso diario.",
-    "imagen": "img/sunscreen.png",
+    "imagen": "img/sunscreen.webp",
     "disponible": true,
     "seccion": "mas_vendidos"
   },
@@ -85,7 +85,7 @@
     "categoria": "Maquillaje",
     "precio": 8000,
     "descripcion": "Delineador resistente al agua de fácil aplicación para precisión extrema.",
-    "imagen": "img/delineador.png",
+    "imagen": "img/delineador.jpg",
     "disponible": true,
     "seccion": "nuevos_productos"
   },
@@ -95,7 +95,7 @@
     "categoria": "Corporal",
     "precio": 14000,
     "descripcion": "Aceite corporal con destellos sutiles para resaltar el bronceado.",
-    "imagen": "img/aceite.png",
+    "imagen": "img/aceite.webp",
     "disponible": true,
     "seccion": "nuevos_productos"
   },
@@ -105,7 +105,7 @@
     "categoria": "Corporal",
     "precio": 10500,
     "descripcion": "Exfoliante natural que renueva la piel y ayuda a la circulación.",
-    "imagen": "img/exfoliante.png",
+    "imagen": "img/exfoliante.jpeg",
     "disponible": true,
     "seccion": "nuevos_productos"
   },
@@ -115,7 +115,7 @@
     "categoria": "Cabello",
     "precio": 6500,
     "descripcion": "Shampoo en barra libre de sulfatos para cabello graso a normal.",
-    "imagen": "img/shampoo.png",
+    "imagen": "img/shampoo.webp",
     "disponible": true,
     "seccion": "nuevos_productos"
   },
@@ -125,7 +125,7 @@
     "categoria": "Skincare",
     "precio": 9000,
     "descripcion": "Agua termal con aloe vera para revitalizar la piel en cualquier momento.",
-    "imagen": "img/bruma.png",
+    "imagen": "img/bruma.jpg",
     "disponible": false,
     "seccion": "nuevos_productos"
   },
@@ -135,7 +135,7 @@
     "categoria": "Maquillaje",
     "precio": 11000,
     "descripcion": "Fórmula enriquecida para lograr pestañas más abundantes y largas.",
-    "imagen": "img/mascara.png",
+    "imagen": "img/mascara.webp",
     "disponible": true,
     "seccion": "nuevos_productos"
   },
@@ -155,7 +155,7 @@
     "categoria": "Corporal",
     "precio": 5500,
     "descripcion": "Hidratación intensiva para manos resecas con manteca de karité pura.",
-    "imagen": "img/crema.png",
+    "imagen": "img/crema.webp",
     "disponible": true,
     "seccion": "nuevos_productos"
   }
