@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mi Cuenta | Distrito Cosmético</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <script src="js/perfil.js" defer></script>
+
+</head>
+
+<body>
+
+<div class="container py-5">
+
+    <!-- Bienvenida -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center">
+
+                <div class="perfil-avatar me-4">
+
+                    <i class="bi bi-person-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="fw-bold mb-1">
+
+                        Hola,
+                        <span id="perfilNombre">
+
+                            Invitado
+
+                        </span> 👋
+
+                    </h3>
+
+                    <p class="text-muted mb-0">
+
+                        Aquí puedes consultar tu información
+                        y el estado de tus pedidos.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Información -->
+
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        Información Personal
+
+                    </h5>
+
+                    <p>
+
+                        <strong>Nombre</strong><br>
+
+                        <span id="nombreCompleto">
+
+                            -
+
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <strong>Correo</strong><br>
+
+                        <span id="correoUsuario">
+
+                            -
+
+                        </span>
+
+                    </p>
+
+                    <hr>
+
+                    <button
+                        class="btn btn-outline-secondary w-100 mb-2"
+                        disabled>
+
+                        Editar Perfil
+
+                    </button>
+
+                    <button
+                        id="btnCerrarSesion"
+                        class="btn btn-danger w-100">
+
+                        Cerrar Sesión
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Pedidos -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+
+                        <i class="bi bi-box-seam me-2"></i>
+
+                        Mis Pedidos
+
+                    </h5>
+
+                    <div id="listaPedidos">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

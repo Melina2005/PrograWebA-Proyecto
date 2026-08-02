@@ -377,3 +377,123 @@ body {
     padding:0;
 
 }
+
+/* ==========================================
+   Mi Cuenta
+========================================== */
+
+.perfil-avatar{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:linear-gradient(
+        135deg,
+        var(--color-2),
+        var(--color-1)
+    );
+
+}
+
+.perfil-avatar i{
+
+    color:white;
+
+    font-size:2.8rem;
+
+}
+
+.card{
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* ======================================
+   Usuario móvil
+====================================== */
+
+.mobile-user-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:14px;
+
+    border-radius:18px;
+
+    background:white;
+
+    color:#333;
+
+    transition:.25s;
+
+    border:1px solid #ececec;
+
+}
+
+.mobile-user-card:hover{
+
+    background:var(--color-4);
+
+    color:#000;
+
+}
+
+.mobile-user-avatar{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--color-2),
+        var(--color-1)
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:1.4rem;
+
+}
+
+.mobile-user-title{
+
+    font-weight:700;
+
+    font-size:.95rem;
+
+}
+
+.mobile-user-info small{
+
+    font-size:.75rem;
+
+}
