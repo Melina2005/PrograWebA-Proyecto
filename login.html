@@ -1,103 +1,256 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión | Distrito Cosmético</title>
+
+    <title>Acceso | Distrito Cosmético</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="bg-light">
 
-    <div class="container py-5">
+<div class="container py-5">
 
-        <div class="row justify-content-center">
+    <div class="row justify-content-center">
 
-            <div class="col-md-6 col-lg-5">
+        <div class="col-md-7 col-lg-6">
 
-                <div class="card shadow border-0">
+            <div class="card shadow border-0">
 
-                    <div class="card-body p-5">
+                <div class="card-body p-5">
 
-                        <div class="text-center mb-4">
+                    <div class="text-center mb-4">
 
-                            <img
-                                src="data/brand/LogComp.svg"
-                                alt="Logo Distrito Cosmético"
-                                style="width:120px;"
-                                class="mb-3"
-                            >
+                        <img
+                            src="data/brand/LogComp.svg"
+                            alt="Distrito Cosmético"
+                            style="width:120px"
+                            class="mb-3"
+                        >
 
-                            <h2 class="fw-bold">
-                                Iniciar Sesión
-                            </h2>
+                        <h2 class="fw-bold">
+                            Distrito Cosmético
+                        </h2>
 
-                            <p class="text-muted">
-                                Bienvenido a Distrito Cosmético
-                            </p>
+                        <p class="text-muted">
+                            Bienvenido
+                        </p>
 
-                        </div>
+                    </div>
 
-                        <form>
+                    <!-- Tabs -->
 
-                            <div class="mb-3">
+                    <ul class="nav nav-pills nav-fill mb-4" id="authTabs">
 
-                                <label class="form-label">
-                                    Correo electrónico
-                                </label>
-
-                                <input
-                                    type="email"
-                                    class="form-control"
-                                    placeholder="correo@ejemplo.com"
-                                >
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label class="form-label">
-                                    Contraseña
-                                </label>
-
-                                <input
-                                    type="password"
-                                    class="form-control"
-                                    placeholder="********"
-                                >
-
-                            </div>
+                        <li class="nav-item">
 
                             <button
-                                type="button"
-                                class="btn btn-primary w-100 mb-3"
-                                onclick="window.location.href='index.html'"
-                            >
+                                class="nav-link active"
+                                id="login-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#loginPanel"
+                                type="button">
+
                                 Iniciar Sesión
+
                             </button>
 
+                        </li>
+
+                        <li class="nav-item">
+
                             <button
-                                type="button"
-                                class="btn btn-outline-secondary w-100"
-                                onclick="alert('Función de registro próximamente')"
-                            >
+                                class="nav-link"
+                                id="register-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#registerPanel"
+                                type="button">
+
                                 Registrarse
+
                             </button>
 
-                        </form>
+                        </li>
 
-                        <div class="text-center mt-4">
+                    </ul>
 
-                            <a
-                                href="index.html"
-                                class="text-decoration-none"
-                            >
-                                ← Volver a la tienda
-                            </a>
+                    <div id="mensajeGeneral"></div>
+
+                    <div class="tab-content">
+
+                        <!-- LOGIN -->
+
+                        <div
+                            class="tab-pane fade show active"
+                            id="loginPanel">
+
+                            <form id="loginForm" novalidate>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Correo electrónico
+                                    </label>
+
+                                    <input
+                                        id="loginCorreo"
+                                        type="email"
+                                        class="form-control"
+                                        placeholder="correo@ejemplo.com"
+                                    >
+
+                                    <div class="invalid-feedback">
+                                        Ingrese un correo válido.
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+                                        Contraseña
+                                    </label>
+
+                                    <input
+                                        id="loginPassword"
+                                        type="password"
+                                        class="form-control"
+                                        placeholder="********"
+                                    >
+
+                                    <div class="invalid-feedback">
+                                        La contraseña es obligatoria.
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary w-100">
+
+                                    Iniciar Sesión
+
+                                </button>
+
+                            </form>
 
                         </div>
+
+                        <!-- REGISTRO -->
+
+                        <div
+                            class="tab-pane fade"
+                            id="registerPanel">
+
+                            <form id="registerForm" novalidate>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+
+                                        Nombre completo
+
+                                    </label>
+
+                                    <input
+                                        id="registroNombre"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Nombre completo">
+
+                                    <div class="invalid-feedback">
+                                        Debe ingresar su nombre.
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+
+                                        Correo electrónico
+
+                                    </label>
+
+                                    <input
+                                        id="registroCorreo"
+                                        type="email"
+                                        class="form-control"
+                                        placeholder="correo@ejemplo.com">
+
+                                    <div class="invalid-feedback">
+                                        Correo inválido.
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+
+                                        Contraseña
+
+                                    </label>
+
+                                    <input
+                                        id="registroPassword"
+                                        type="password"
+                                        class="form-control"
+                                        placeholder="Mínimo 8 caracteres">
+
+                                    <div class="invalid-feedback">
+                                        La contraseña debe tener al menos 8 caracteres.
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+
+                                        Confirmar contraseña
+
+                                    </label>
+
+                                    <input
+                                        id="registroConfirmacion"
+                                        type="password"
+                                        class="form-control"
+                                        placeholder="Repita la contraseña">
+
+                                    <div class="invalid-feedback">
+                                        Las contraseñas no coinciden.
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-success w-100">
+
+                                    Crear cuenta
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+
+                        <a
+                            href="index.html"
+                            class="text-decoration-none">
+
+                            ← Volver a la tienda
+
+                        </a>
 
                     </div>
 
@@ -109,5 +262,11 @@
 
     </div>
 
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/usuarios.js"></script>
 </body>
+
 </html>
