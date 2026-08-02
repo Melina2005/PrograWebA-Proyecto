@@ -232,3 +232,148 @@ body {
     height: 220px;
     object-fit: cover;
 }
+
+/* ==========================
+   Botón de usuario
+========================== */
+
+.user-pill,
+.cart-pill{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:white;
+
+    border:2px solid transparent;
+
+    color:var(--color-1);
+
+    transition:all .25s ease;
+
+
+}
+
+.user-pill:hover,
+.cart-pill:hover{
+
+    background:var(--color-4);
+
+    border-color:var(--color-2);
+
+    transform:translateY(-1px);
+
+    box-shadow:0 4px 12px rgba(0,0,0,.10);
+
+}
+
+.user-avatar{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--color-2),
+        var(--color-1)
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-shrink:0;
+
+}
+
+.user-avatar i{
+
+    color:white;
+
+    font-size:1.3rem;
+
+}
+
+.user-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    line-height:1.15;
+
+}
+
+.user-name{
+
+    font-size:.82rem;
+
+    color:#666;
+
+}
+
+.user-name span{
+
+    color:#222;
+
+    font-weight:700;
+
+}
+
+.user-account{
+
+    font-size:.78rem;
+
+    font-weight:600;
+
+    color:var(--color-1);
+
+}
+
+.cart-icon{
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--color-2),
+        var(--color-1)
+    );
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.cart-icon i{
+
+    color:white;
+    font-size:1.25rem;
+
+}
+
+.cart-pill{
+
+    width:58px;
+    height:58px;
+    justify-content:center;
+    align-items:center;
+    padding:0;
+
+}
