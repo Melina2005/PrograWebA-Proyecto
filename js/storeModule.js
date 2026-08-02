@@ -4,6 +4,7 @@ const ASSETS_URL = `${URL}/assets`;
 const FALLBACK_URL = `${ASSETS_URL}/fallback.webp`;
 
 let productosGlobales = [];
+let productosBase = []; 
 
 export async function initStoreModule() {
     const inputBuscadorDesktop = document.getElementById('buscador-desktop');
@@ -65,13 +66,21 @@ export async function initStoreModule() {
                         p => p.seccion === 'nuevos_productos'
                     );
                     break;
+                case 'promociones.html': //Se agrega el caso de promociones 
+                    productosFiltrados = productosGlobales.filter(
+                        p => p.promocion === true
+                    );
+                    break;
             }
 
+            //Se está guardando la lista de los productos base para que se use a la hora de hacer una busqueda
+            productosBase = productosFiltrados;
             renderizarLista(productosFiltrados, 'productos-container');
 
         } else {
 
-            renderizarSecciones(productosGlobales);
+            productosBase = productosGlobales;
+            renderizarSecciones(productosBase);
 
         }
     } catch (error) {
@@ -173,26 +182,33 @@ function renderizarLista(lista, containerId) {
     container.appendChild(fragmento);
 }
 
+function quitarAcentos(texto) {
+    return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+}
+
 function manejarBusqueda(evento) {
-    const termino = evento.target.value.toLowerCase().trim();
+    const termino = quitarAcentos(evento.target.value.toLowerCase().trim());
 
     const desktop = document.getElementById('buscador-desktop');
     const mobile = document.getElementById('buscador-mobile');
     if (desktop && evento.target.id === 'buscador-mobile') desktop.value = evento.target.value;
     if (mobile && evento.target.id === 'buscador-desktop') mobile.value = evento.target.value;
 
-    if (termino === '') {
-        renderizarSecciones(productosGlobales);
-        return;
+    const filtrados = termino === ''
+        ? productosBase
+        : productosBase.filter(producto => {
+        const coincideNombre = quitarAcentos(producto.nombre?.toLowerCase() ?? '').includes(termino);
+        const coincideCategoria = quitarAcentos(producto.categoria?.toLowerCase() ?? '').includes(termino);
+            return coincideNombre || coincideCategoria;
+        });
+
+    if (document.getElementById('productos-container')) {
+        renderizarLista(filtrados, 'productos-container');
+    } else {
+        renderizarSecciones(filtrados);
     }
-
-    const filtrados = productosGlobales.filter(producto => {
-        const coincideNombre = producto.nombre?.toLowerCase().includes(termino);
-        const coincideCategoria = producto.categoria?.toLowerCase().includes(termino);
-        return coincideNombre || coincideCategoria;
-    });
-
-    renderizarSecciones(filtrados);
 }
 
 function abrirModal(producto) {
