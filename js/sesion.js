@@ -2,59 +2,71 @@
 // Usuario con sesión iniciada
 // ==========================
 
-const usuario = JSON.parse(
-    localStorage.getItem("usuarioActivo")
-);
-
-// Desktop
-
-const nombreUsuario =
-document.getElementById("nombreUsuario");
-
-const btnUsuario =
-document.getElementById("btnUsuario");
-
-// Mobile
-
-const nombreUsuarioMobile =
-document.getElementById("nombreUsuarioMobile");
-
-const btnUsuarioMobile =
-document.getElementById("btnUsuarioMobile");
+// Obtener el usuario activo desde localStorage
+const usuario = JSON.parse(localStorage.getItem("usuarioActivo"));
 
 // ==========================
+// Elementos Desktop
+// ==========================
 
-if(usuario){
+const nombreUsuario = document.getElementById("nombreUsuario");
+const btnUsuario = document.getElementById("btnUsuario");
 
-    const primerNombre =
-        usuario.nombre.split(" ")[0];
+// ==========================
+// Elementos Mobile
+// ==========================
 
-    if(nombreUsuario){
+const nombreUsuarioMobile = document.getElementById("nombreUsuarioMobile");
+const btnUsuarioMobile = document.getElementById("btnUsuarioMobile");
 
-        nombreUsuario.textContent =
-            primerNombre;
+// ==========================
+// Actualizar interfaz
+// ==========================
 
+if (usuario) {
+
+    const primerNombre = usuario.nombre.split(" ")[0];
+
+    // -------- Desktop --------
+
+    if (nombreUsuario) {
+        nombreUsuario.textContent = primerNombre;
     }
 
-    if(nombreUsuarioMobile){
-
-        nombreUsuarioMobile.textContent =
-            primerNombre;
-
+    if (btnUsuario) {
+        btnUsuario.href = "mi-cuenta.html";
     }
 
-    if(btnUsuario){
+    // -------- Mobile --------
 
-        btnUsuario.href =
-            "mi-cuenta.html";
-
+    if (nombreUsuarioMobile) {
+        nombreUsuarioMobile.textContent = primerNombre;
     }
 
-    if(btnUsuarioMobile){
+    if (btnUsuarioMobile) {
+        btnUsuarioMobile.href = "mi-cuenta.html";
+    }
 
-        btnUsuarioMobile.href =
-            "mi-cuenta.html";
+} else {
 
+    // -------- Desktop --------
+
+    if (nombreUsuario) {
+        nombreUsuario.textContent = "Invitado";
+    }
+
+    if (btnUsuario) {
+        btnUsuario.href = "login.html";
+    }
+
+    // -------- Mobile --------
+
+    if (nombreUsuarioMobile) {
+        nombreUsuarioMobile.textContent = "Invitado";
+    }
+
+    if (btnUsuarioMobile) {
+        btnUsuarioMobile.href = "login.html";
     }
 
 }
