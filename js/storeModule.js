@@ -1,4 +1,6 @@
-const URL = "../data";
+import { inicializarBotonAgregar, actualizarContadores } from "./carritoModule.js";
+
+const URL = "data";
 const PRODUCTOS_URL = `${URL}/productos.json`;
 const ASSETS_URL = `${URL}/assets`;
 const FALLBACK_URL = `${ASSETS_URL}/fallback.webp`;
@@ -7,6 +9,7 @@ let productosGlobales = [];
 let productosBase = []; 
 
 export async function initStoreModule() {
+    actualizarContadores();
     const inputBuscadorDesktop = document.getElementById('buscador-desktop');
     const inputBuscadorMobile = document.getElementById('buscador-mobile');
 
@@ -242,6 +245,8 @@ function abrirModal(producto) {
                 producto.disponible ? 'badge-disponibilidad' : 'bg-danger'
             }`;
     }
+
+    inicializarBotonAgregar(producto);
 
     const modalElement = document.getElementById('productModal');
     const productModal = bootstrap.Modal.getOrCreateInstance(modalElement);
