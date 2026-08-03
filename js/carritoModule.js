@@ -1,4 +1,5 @@
 const CARRITO_KEY = 'distritoCosmeticoCarrito';
+const PEDIDOS_KEY = "distritoCosmeticoPedidos";
 const PRODUCTOS_URL = 'data/productos.json';
 const FALLBACK_URL = 'data/assets/fallback.webp';
 
@@ -23,6 +24,64 @@ function guardarCarrito(carrito) {
         console.error('No se pudo guardar el carrito.', error);
     }
     actualizarContadores();
+}
+
+function guardarPedido(productosPorId) {
+
+    const carrito = leerCarrito();
+
+    if (carrito.length === 0) return;
+
+    const usuario =
+        JSON.parse(localStorage.getItem("usuarioActivo"));
+
+    if (!usuario) return;
+
+    const pedidos =
+        JSON.parse(localStorage.getItem(PEDIDOS_KEY) || "[]");
+
+    let total = 0;
+
+    const productos = carrito.map(item => {
+
+        const producto = productosPorId.get(item.id);
+
+        total += producto.precio * item.cantidad;
+
+        return {
+
+            nombre: producto.nombre,
+            cantidad: item.cantidad,
+            precio: producto.precio
+
+        };
+
+    });
+
+
+    pedidos.unshift({
+
+        id: "PED-" + Date.now(),
+
+        usuario: usuario.nombre,
+
+        correo: usuario.correo,
+
+        fecha: new Date().toLocaleDateString("es-CR"),
+
+        estado: "En preparación",
+
+        total,
+
+        productos
+
+    });
+
+    localStorage.setItem(
+        PEDIDOS_KEY,
+        JSON.stringify(pedidos)
+    );
+
 }
 
 function obtenerCantidadTotal(carrito = leerCarrito()) {
@@ -235,10 +294,16 @@ export async function initCartPage() {
         });
         document.getElementById('btn-finalizar-compra')?.addEventListener('click', () => {
             if (leerCarrito().length === 0) return;
-            if (confirm('¿Confirmas la compra? Esta simulación vaciará el carrito.')) {
+            if (confirm('¿Confirmas la compra?')) {
+
+                guardarPedido(productosPorId);
+
                 vaciarCarrito();
+
                 renderizarCarrito(productosPorId);
-                alert('Compra realizada exitosamente.');
+
+                alert("¡Compra realizada exitosamente!");
+
             }
         });
     } catch (error) {

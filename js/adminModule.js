@@ -19,7 +19,9 @@ async function initAdminModule() {
 
         const resOrdenes = await fetch(ORDENES_URL);
         if (resOrdenes.ok) {
-            ordenesGlobales = await resOrdenes.json();
+            ordenesGlobales =
+                JSON.parse(localStorage.getItem("distritoCosmeticoPedidos")) || [];
+
             renderizarOrdenes();
         }
 
@@ -217,7 +219,7 @@ function renderizarOrdenes() {
             ${ordenesGlobales.map(o => `
                 <tr>
                     <td>#${o.id}</td>
-                    <td>${o.cliente}</td>
+                    <td>${o.usuario}</td>
                     <td>${o.fecha}</td>
                     <td>₡${Number(o.total).toLocaleString('es-CR')}</td>
                     <td>
@@ -241,12 +243,25 @@ function renderizarOrdenes() {
 
     container.appendChild(wrapper);
 
-    container.querySelectorAll('.select-estado').forEach(select => {
-        select.addEventListener('change', (e) => {
-            const id = Number(e.target.dataset.id);
+    container.querySelectorAll(".select-estado").forEach(select => {
+
+        select.addEventListener("change", e => {
+
+            const id = e.target.dataset.id;
+
             const orden = ordenesGlobales.find(o => o.id === id);
-            if (orden) orden.estado = e.target.value;
+
+            if (!orden) return;
+
+            orden.estado = e.target.value;
+
+            localStorage.setItem(
+                "distritoCosmeticoPedidos",
+                JSON.stringify(ordenesGlobales)
+            );
+
         });
+
     });
 
     container.querySelectorAll('.btn-ver-orden').forEach(btn => {
@@ -262,53 +277,96 @@ function abrirDetalleOrden(id) {
 
     const body = document.getElementById('orden-detalle-body');
     body.innerHTML = `
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <p class="mb-1"><strong>Cliente:</strong> ${orden.cliente}</p>
-                <p class="mb-1"><strong>Correo:</strong> ${orden.correo}</p>
-                <p class="mb-1"><strong>Teléfono:</strong> ${orden.telefono}</p>
-            </div>
-            <div class="col-md-6">
-                <p class="mb-1"><strong>Fecha del pedido:</strong> ${orden.fecha}</p>
-                <p class="mb-1"><strong>Estado:</strong> ${orden.estado}</p>
-                <p class="mb-1"><strong>Dirección de entrega:</strong> ${orden.direccion}</p>
-            </div>
-        </div>
 
-        <h6 class="fw-bold mb-3">Productos del pedido</h6>
-        <div class="table-responsive">
-            <table class="table table-sm align-middle">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Precio unitario</th>
-                        <th>Cantidad</th>
-                        <th>Disponibilidad</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${orden.productos.map(item => `
-                        <tr>
-                            <td>${item.nombre}</td>
-                            <td>₡${Number(item.precio).toLocaleString('es-CR')}</td>
-                            <td>${item.cantidad}</td>
-                            <td>${item.disponible
-                                ? '<span class="badge badge-disponibilidad">Disponible</span>'
-                                : '<span class="badge bg-danger">Agotado</span>'}</td>
-                            <td>₡${Number(item.precio * item.cantidad).toLocaleString('es-CR')}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-end fw-bold">Total</td>
-                        <td class="fw-bold">₡${Number(orden.total).toLocaleString('es-CR')}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    `;
+<div class="row mb-4">
+
+    <div class="col-md-6">
+
+        <p><strong>Cliente:</strong> ${orden.usuario}</p>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <p><strong>Fecha:</strong> ${orden.fecha}</p>
+
+        <p><strong>Estado:</strong> ${orden.estado}</p>
+
+    </div>
+
+</div>
+
+<h6 class="fw-bold mb-3">
+
+Productos del pedido
+
+</h6>
+
+<table class="table">
+
+    <thead>
+
+        <tr>
+
+            <th>Producto</th>
+
+            <th>Precio</th>
+
+            <th>Cantidad</th>
+
+            <th>Subtotal</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        ${orden.productos.map(producto => `
+
+            <tr>
+
+                <td>${producto.nombre}</td>
+
+                <td>₡${producto.precio.toLocaleString("es-CR")}</td>
+
+                <td>${producto.cantidad}</td>
+
+                <td>
+
+                    ₡${(producto.precio * producto.cantidad).toLocaleString("es-CR")}
+
+                </td>
+
+            </tr>
+
+        `).join("")}
+
+    </tbody>
+
+    <tfoot>
+
+        <tr>
+
+            <td colspan="3" class="text-end fw-bold">
+
+                Total
+
+            </td>
+
+            <td class="fw-bold">
+
+                ₡${orden.total.toLocaleString("es-CR")}
+
+            </td>
+
+        </tr>
+
+    </tfoot>
+
+</table>
+
+`;
 
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('ordenDetalleModal'));
     modal.show();
