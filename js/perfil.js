@@ -20,7 +20,7 @@ const pedidos =
     JSON.parse(localStorage.getItem("distritoCosmeticoPedidos")) || [];
 
 const pedidosUsuario =
-    pedidos.filter(pedido => pedido.usuario === usuario.correo);
+    pedidos.filter(pedido => pedido.correo === usuario.correo);
 
 const lista =
     document.getElementById("listaPedidos");

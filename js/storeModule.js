@@ -6,12 +6,25 @@ const ASSETS_URL = `${URL}/assets`;
 const FALLBACK_URL = `${ASSETS_URL}/fallback.webp`;
 
 let productosGlobales = [];
-let productosBase = []; 
+let productosBase = [];
 
 export async function initStoreModule() {
     actualizarContadores();
-    const inputBuscadorDesktop = document.getElementById('buscador-desktop');
-    const inputBuscadorMobile = document.getElementById('buscador-mobile');
+
+    document.addEventListener("layoutCargado", () => {
+
+        const inputBuscadorDesktop = document.getElementById("buscador-desktop");
+        const inputBuscadorMobile = document.getElementById("buscador-mobile");
+
+        if (inputBuscadorDesktop) {
+            inputBuscadorDesktop.addEventListener("input", manejarBusqueda);
+        }
+
+        if (inputBuscadorMobile) {
+            inputBuscadorMobile.addEventListener("input", manejarBusqueda);
+        }
+
+    });
 
     try {
         const res = await fetch(PRODUCTOS_URL);
@@ -88,7 +101,7 @@ export async function initStoreModule() {
         }
     } catch (error) {
         console.error("Hubo un error :", error);
-        
+
         const containers = ['mas-vendidos-container', 'nuevos-productos-container'];
         containers.forEach(id => {
             const container = document.getElementById(id);
@@ -102,8 +115,7 @@ export async function initStoreModule() {
         });
     }
 
-    if (inputBuscadorDesktop) inputBuscadorDesktop.addEventListener('input', manejarBusqueda);
-    if (inputBuscadorMobile) inputBuscadorMobile.addEventListener('input', manejarBusqueda);
+
 }
 
 function renderizarSecciones(productos) {
@@ -133,9 +145,9 @@ function renderizarLista(lista, containerId) {
     lista.forEach(producto => {
         const wrapper = document.createElement('div');
 
-        if(containerId === 'productos-container'){
+        if (containerId === 'productos-container') {
             wrapper.className = 'col-md-4 col-lg-3';
-        }else{
+        } else {
             wrapper.className = '';
         }
 
@@ -146,7 +158,7 @@ function renderizarLista(lista, containerId) {
         const imgWrapper = document.createElement('div');
         imgWrapper.className = 'product-img-wrapper';
 
-      const img = document.createElement('img');
+        const img = document.createElement('img');
 
         img.src = producto.imagen; // 👈 así directo
         img.alt = producto.nombre;
@@ -172,15 +184,15 @@ function renderizarLista(lista, containerId) {
 
         card.append(imgWrapper, title, description, price);
 
-        if(containerId === 'productos-container'){
+        if (containerId === 'productos-container') {
             wrapper.appendChild(card);
             fragmento.appendChild(wrapper);
-        }else{
+        } else {
             fragmento.appendChild(card);
         }
     });
 
-    
+
 
     container.appendChild(fragmento);
 }
@@ -202,8 +214,8 @@ function manejarBusqueda(evento) {
     const filtrados = termino === ''
         ? productosBase
         : productosBase.filter(producto => {
-        const coincideNombre = quitarAcentos(producto.nombre?.toLowerCase() ?? '').includes(termino);
-        const coincideCategoria = quitarAcentos(producto.categoria?.toLowerCase() ?? '').includes(termino);
+            const coincideNombre = quitarAcentos(producto.nombre?.toLowerCase() ?? '').includes(termino);
+            const coincideCategoria = quitarAcentos(producto.categoria?.toLowerCase() ?? '').includes(termino);
             return coincideNombre || coincideCategoria;
         });
 
@@ -241,8 +253,7 @@ function abrirModal(producto) {
     if (disponibilidad) {
         disponibilidad.textContent = producto.disponible ? 'Disponible' : 'Agotado';
         disponibilidad.className =
-            `badge p-2 px-3 rounded-pill mt-2 ${
-                producto.disponible ? 'badge-disponibilidad' : 'bg-danger'
+            `badge p-2 px-3 rounded-pill mt-2 ${producto.disponible ? 'badge-disponibilidad' : 'bg-danger'
             }`;
     }
 
