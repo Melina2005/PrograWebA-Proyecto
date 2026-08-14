@@ -25,6 +25,14 @@ const bestSellers = computed(() =>
 const newProducts = computed(() =>
   searchedProducts.value.filter((product) => product.seccion === 'nuevos_productos'),
 )
+
+const selectProduct = async (product) => {
+  try {
+    selectedProduct.value = await catalog.getDetails(product._id || product.id)
+  } catch {
+    selectedProduct.value = product
+  }
+}
 </script>
 
 <template>
@@ -69,7 +77,7 @@ const newProducts = computed(() =>
           Explorar más <i class="bi bi-arrow-right-circle ms-2 fs-5"></i>
         </RouterLink>
       </div>
-      <ProductGrid :products="bestSellers" horizontal @select="selectedProduct = $event" />
+      <ProductGrid :products="bestSellers" horizontal @select="selectProduct" />
     </section>
 
     <section class="mb-5">
@@ -82,7 +90,7 @@ const newProducts = computed(() =>
           Explorar más <i class="bi bi-arrow-right-circle ms-2 fs-5"></i>
         </RouterLink>
       </div>
-      <ProductGrid :products="newProducts" horizontal @select="selectedProduct = $event" />
+      <ProductGrid :products="newProducts" horizontal @select="selectProduct" />
     </section>
   </main>
 

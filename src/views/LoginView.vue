@@ -2,9 +2,11 @@
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useCartStore } from '../stores/cart'
 import { assetUrl } from '../utils/format'
 
 const auth = useAuthStore()
+const cart = useCartStore()
 const route = useRoute()
 const router = useRouter()
 const activeTab = ref('login')
@@ -27,16 +29,21 @@ const submitLogin = async () => {
   loginErrors.password = !loginForm.password
   if (loginErrors.correo || loginErrors.password) return
 
-  const result = auth.login(loginForm.correo.trim(), loginForm.password)
+  const result = await auth.login(loginForm.correo.trim(), loginForm.password)
   if (!result.ok) {
     message.value = { text: result.message, type: 'danger' }
     return
   }
 
+  try {
+    await cart.mergeGuest()
+  } catch (error) {
+    message.value = { text: `Sesión iniciada. ${error.message}`, type: 'warning' }
+  }
   await router.push(typeof route.query.redirect === 'string' ? route.query.redirect : '/')
 }
 
-const submitRegister = () => {
+const submitRegister = async () => {
   message.value = null
   registerErrors.nombre = registerForm.nombre.trim().length < 3
   registerErrors.correo = !validEmail(registerForm.correo.trim())
@@ -44,7 +51,7 @@ const submitRegister = () => {
   registerErrors.confirmation = registerForm.password !== registerForm.confirmation
   if (Object.values(registerErrors).some(Boolean)) return
 
-  const result = auth.register({
+  const result = await auth.register({
     nombre: registerForm.nombre.trim(),
     correo: registerForm.correo.trim(),
     password: registerForm.password,
@@ -128,7 +135,9 @@ const submitRegister = () => {
                   />
                   <div class="invalid-feedback">La contraseña es obligatoria.</div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                <button type="submit" class="btn btn-primary w-100" :disabled="auth.loading">
+                  {{ auth.loading ? 'Ingresando...' : 'Iniciar Sesión' }}
+                </button>
               </form>
 
               <form v-else novalidate @submit.prevent="submitRegister">
@@ -182,7 +191,9 @@ const submitRegister = () => {
                   />
                   <div class="invalid-feedback">Las contraseñas no coinciden.</div>
                 </div>
-                <button type="submit" class="btn btn-success w-100">Crear cuenta</button>
+                <button type="submit" class="btn btn-success w-100" :disabled="auth.loading">
+                  {{ auth.loading ? 'Creando...' : 'Crear cuenta' }}
+                </button>
               </form>
 
               <div class="text-center mt-4">

@@ -1,37 +1,23 @@
-# Distrito Cosmético
+# Distrito Cosmético Frontend
 
-Tienda académica migrada a Vue 3, Vite, Vue Router y Pinia.
+Cliente Vue 3, Vite, Vue Router y Pinia para el API de Distrito Cosmético.
 
-## Requisitos
-
-- Node.js 20.19 o superior.
-- npm.
-
-## Desarrollo
+## Desarrollo aislado
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-## Comandos
+Vite redirige `/api` a `http://localhost:3000`. Puede definir `VITE_API_BASE_URL` para utilizar otra URL. En producción se recomienda conservar `/api` para que frontend y backend compartan origen.
 
-- `npm run dev`: inicia el servidor de desarrollo.
-- `npm run build`: genera la aplicación de producción en `dist/`.
-- `npm run preview`: previsualiza el build.
-- `npm run lint`: valida JavaScript y componentes Vue.
-- `npm run format`: aplica Prettier.
-- `npm run format:check`: comprueba el formato.
+## Verificación
 
-## Rutas
+```bash
+npm run lint
+npm run build
+```
 
-La aplicación usa rutas limpias con Vue Router. El servidor de producción debe
-responder con `index.html` para rutas desconocidas, de modo que abrir o recargar
-direcciones como `/maquillaje`, `/carrito` o `/mi-cuenta` funcione correctamente.
+El flujo normal de producción se ejecuta desde `distrito-cosmetico-backend` con `npm run build`; ese comando instala y construye este proyecto automáticamente.
 
-## Persistencia
-
-Usuarios, sesión, carrito, pedidos y cambios administrativos de productos se
-guardan en `localStorage`. Este modelo conserva el alcance académico del
-proyecto; las contraseñas almacenadas en el navegador no son apropiadas para un
-entorno de producción.
+La sesión JWT, la preferencia de moneda y el carrito de invitado utilizan claves propias de `localStorage`. Los datos locales de versiones anteriores no se leen ni se eliminan.

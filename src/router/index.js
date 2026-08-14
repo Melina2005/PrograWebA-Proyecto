@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const categoryRoutes = [
   {
@@ -99,6 +100,12 @@ const router = createRouter({
     },
     ...categoryRoutes,
     {
+      path: '/categoria/:slug',
+      name: 'categoria',
+      component: () => import('../views/CatalogView.vue'),
+      meta: { layout: 'store', title: 'Categoría' },
+    },
+    {
       path: '/carrito',
       name: 'carrito',
       component: () => import('../views/CartView.vue'),
@@ -120,7 +127,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue'),
-      meta: { layout: 'store', title: 'Panel de Administrador' },
+      meta: { layout: 'store', title: 'Panel de Administrador', requiresAdmin: true },
     },
     {
       path: '/nosotros',
@@ -133,9 +140,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('usuarioActivo')) {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
+  if (to.meta.requiresAdmin && !auth.isAdmin)
+    return { name: auth.isAuthenticated ? 'inicio' : 'login' }
 })
 
 router.afterEach((to) => {

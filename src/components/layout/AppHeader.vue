@@ -1,29 +1,35 @@
 <script setup>
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useCartStore } from '../../stores/cart'
 import { useCatalogStore } from '../../stores/catalog'
+import { useCategoriesStore } from '../../stores/categories'
+import { useCurrencyStore } from '../../stores/currency'
 import { assetUrl } from '../../utils/format'
 
 const route = useRoute()
 const auth = useAuthStore()
 const cart = useCartStore()
 const catalog = useCatalogStore()
+const categories = useCategoriesStore()
+const currency = useCurrencyStore()
 const menuOpen = ref(false)
 const categoriesOpen = ref(false)
 const closeButton = ref(null)
+let searchTimer
 
-const links = [
+const fixedLinks = [
   { to: '/nosotros', label: 'Nosotros' },
   { to: '/nuevos-productos', label: 'Nuevo' },
-  { to: '/maquillaje', label: 'Maquillaje' },
-  { to: '/skincare', label: 'Skincare' },
-  { to: '/cabello', label: 'Cabello' },
-  { to: '/fragancias', label: 'Fragancias' },
-  { to: '/corporal', label: 'Corporal' },
   { to: '/promociones', label: 'Promociones' },
 ]
+const categoryLinks = computed(() =>
+  categories.categories
+    .filter((category) => category.activa)
+    .map((category) => ({ to: `/categoria/${category.slug}`, label: category.nombre })),
+)
+const links = computed(() => [fixedLinks[0], fixedLinks[1], ...categoryLinks.value, fixedLinks[2]])
 
 const closeMenu = () => {
   menuOpen.value = false
@@ -50,8 +56,17 @@ watch(
   },
 )
 
+watch(
+  () => catalog.searchQuery,
+  (value) => {
+    window.clearTimeout(searchTimer)
+    searchTimer = window.setTimeout(() => catalog.load(value ? { search: value } : {}), 300)
+  },
+)
+
 window.addEventListener('keydown', onKeydown)
 onBeforeUnmount(() => {
+  window.clearTimeout(searchTimer)
   document.body.classList.remove('overlay-open')
   window.removeEventListener('keydown', onKeydown)
 })
@@ -85,6 +100,18 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="d-flex align-items-center fs-4 header-icons">
+          <select
+            class="form-select form-select-sm me-2"
+            :value="currency.currency"
+            aria-label="Moneda"
+            @change="currency.setCurrency($event.target.value)"
+          >
+            <option value="CRC">CRC</option>
+            <option value="USD">USD</option>
+          </select>
+          <RouterLink v-if="auth.isAdmin" to="/admin" class="btn btn-sm btn-outline-dark me-2">
+            Admin
+          </RouterLink>
           <RouterLink
             to="/carrito"
             class="cart-pill text-decoration-none me-2"
@@ -213,13 +240,39 @@ onBeforeUnmount(() => {
 
             <div v-show="categoriesOpen" id="mobileCategories" class="mt-3">
               <ul class="nav flex-column ms-4">
-                <li v-for="link in links" :key="`mobile-${link.to}`">
+                <li v-for="link in categoryLinks" :key="`mobile-${link.to}`">
                   <RouterLink class="nav-link text-dark" :to="link.to" @click="closeMenu">
                     {{ link.label }}
                   </RouterLink>
                 </li>
               </ul>
             </div>
+          </li>
+
+          <li v-if="auth.isAdmin" class="nav-item">
+            <RouterLink
+              to="/admin"
+              class="mobile-user-card text-decoration-none"
+              @click="closeMenu"
+            >
+              <div class="mobile-user-avatar"><i class="bi bi-gear"></i></div>
+              <div class="mobile-user-info">
+                <div class="mobile-user-title">Administración</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto"></i>
+            </RouterLink>
+          </li>
+          <li class="nav-item">
+            <label for="mobileCurrency" class="form-label">Moneda</label>
+            <select
+              id="mobileCurrency"
+              class="form-select"
+              :value="currency.currency"
+              @change="currency.setCurrency($event.target.value)"
+            >
+              <option value="CRC">Colones (CRC)</option>
+              <option value="USD">Dólares (USD)</option>
+            </select>
           </li>
 
           <li class="nav-item">

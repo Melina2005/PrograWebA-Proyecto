@@ -1,102 +1,164 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { readStorage, writeStorage } from '../utils/storage'
-import { useCatalogStore } from './catalog'
+import { api } from '../api/client'
+import { useAuthStore } from './auth'
+import { normalizeProduct, useCatalogStore } from './catalog'
 
-const STORAGE_KEY = 'distritoCosmeticoCarrito'
-
-const normalizeCart = (value) => {
-  if (!Array.isArray(value)) return []
-  return value
-    .map((item) => ({
-      id: Number(item.id),
-      cantidad: Math.floor(Number(item.cantidad)),
-    }))
-    .filter(
-      (item) =>
-        Number.isInteger(item.id) &&
-        item.id > 0 &&
-        Number.isInteger(item.cantidad) &&
-        item.cantidad > 0,
-    )
+const GUEST_CART_KEY = 'dcGuestCartV2'
+const readGuest = () => {
+  try {
+    const value = JSON.parse(localStorage.getItem(GUEST_CART_KEY) || '[]')
+    return Array.isArray(value) ? value : []
+  } catch {
+    return []
+  }
 }
 
+const normalizeRemote = (cart) =>
+  (cart?.items || [])
+    .filter((item) => item.producto)
+    .map((item) => ({
+      id: Number(item.producto.id),
+      cantidad: Number(item.cantidad),
+      product: normalizeProduct(item.producto),
+    }))
+
 export const useCartStore = defineStore('cart', () => {
+  const auth = useAuthStore()
   const catalog = useCatalogStore()
-  const lines = ref(normalizeCart(readStorage(STORAGE_KEY, [])))
+  const lines = ref([])
+  const loading = ref(false)
+  const error = ref('')
 
   const items = computed(() =>
     lines.value
-      .map((line) => ({ ...line, product: catalog.findById(line.id) }))
+      .map((line) => ({ ...line, product: line.product || catalog.findById(line.id) }))
       .filter((item) => item.product),
   )
-  const count = computed(() => lines.value.reduce((total, line) => total + line.cantidad, 0))
+  const count = computed(() => lines.value.reduce((sum, item) => sum + item.cantidad, 0))
   const total = computed(() =>
-    items.value.reduce((sum, item) => sum + Number(item.product.precio) * Number(item.cantidad), 0),
+    items.value.reduce((sum, item) => sum + item.product.precio * item.cantidad, 0),
   )
 
-  function persist() {
-    writeStorage(STORAGE_KEY, lines.value)
-  }
+  const persistGuest = () =>
+    localStorage.setItem(
+      GUEST_CART_KEY,
+      JSON.stringify(lines.value.map(({ id, cantidad }) => ({ id, cantidad }))),
+    )
 
-  function add(product) {
-    if (!product || !product.disponible || Number(product.stock) <= 0) {
-      return { ok: false, message: 'Este producto no está disponible.' }
-    }
-
-    const existing = lines.value.find((line) => line.id === Number(product.id))
-    const quantity = (existing?.cantidad || 0) + 1
-
-    if (quantity > Number(product.stock)) {
-      return {
-        ok: false,
-        message: `Solo hay ${product.stock} unidad(es) disponible(s).`,
-      }
-    }
-
-    if (existing) existing.cantidad = quantity
-    else lines.value.push({ id: Number(product.id), cantidad: 1 })
-    persist()
-    return { ok: true, message: 'Producto agregado al carrito.' }
-  }
-
-  function setQuantity(id, quantity) {
-    const product = catalog.findById(id)
-    const line = lines.value.find((item) => item.id === Number(id))
-    if (!line || !product) return
-
-    const normalized = Math.floor(Number(quantity))
-    if (normalized <= 0 || !product.disponible || Number(product.stock) <= 0) {
-      remove(id)
+  async function load() {
+    error.value = ''
+    if (!auth.isAuthenticated) {
+      lines.value = readGuest()
       return
     }
-
-    line.cantidad = Math.min(normalized, Number(product.stock))
-    persist()
+    loading.value = true
+    try {
+      const result = await api('/cart')
+      lines.value = normalizeRemote(result.data)
+    } catch (cause) {
+      error.value = cause.message
+    } finally {
+      loading.value = false
+    }
   }
 
-  function remove(id) {
-    lines.value = lines.value.filter((line) => line.id !== Number(id))
-    persist()
+  async function add(product) {
+    if (!product?.disponible || product.stock <= 0)
+      return { ok: false, message: 'Este producto no está disponible.' }
+    const existing = lines.value.find((line) => line.id === product.id)
+    const quantity = (existing?.cantidad || 0) + 1
+    if (quantity > product.stock)
+      return { ok: false, message: `Solo hay ${product.stock} unidad(es) disponible(s).` }
+    try {
+      if (auth.isAuthenticated) {
+        const result = await api('/cart/items', {
+          method: 'POST',
+          body: { productId: product._id || product.id, cantidad: quantity },
+        })
+        lines.value = normalizeRemote(result.data)
+      } else {
+        if (existing) existing.cantidad = quantity
+        else lines.value.push({ id: product.id, cantidad: 1, product })
+        persistGuest()
+      }
+      return { ok: true, message: 'Producto agregado al carrito.' }
+    } catch (cause) {
+      return { ok: false, message: cause.message }
+    }
   }
 
-  function clear() {
-    lines.value = []
-    persist()
-  }
-
-  function validate() {
-    lines.value = lines.value
-      .map((line) => {
-        const product = catalog.findById(line.id)
-        if (!product?.disponible || Number(product.stock) <= 0) return null
-        return { id: line.id, cantidad: Math.min(line.cantidad, Number(product.stock)) }
+  async function setQuantity(id, quantity) {
+    const product =
+      catalog.findById(id) || items.value.find((item) => item.id === Number(id))?.product
+    if (!product || quantity <= 0) return remove(id)
+    const normalized = Math.min(Math.floor(Number(quantity)), product.stock)
+    if (auth.isAuthenticated) {
+      const result = await api(`/cart/items/${product._id || product.id}`, {
+        method: 'PUT',
+        body: { cantidad: normalized },
       })
-      .filter(Boolean)
-    persist()
+      lines.value = normalizeRemote(result.data)
+    } else {
+      const line = lines.value.find((item) => item.id === Number(id))
+      if (line) line.cantidad = normalized
+      persistGuest()
+    }
   }
 
-  validate()
+  async function remove(id) {
+    const product =
+      catalog.findById(id) || items.value.find((item) => item.id === Number(id))?.product
+    if (auth.isAuthenticated && product) {
+      const result = await api(`/cart/items/${product._id || product.id}`, { method: 'DELETE' })
+      lines.value = normalizeRemote(result.data)
+    } else {
+      lines.value = lines.value.filter((item) => item.id !== Number(id))
+      persistGuest()
+    }
+  }
 
-  return { lines, items, count, total, add, setQuantity, remove, clear, validate }
+  async function clear() {
+    if (auth.isAuthenticated) await api('/cart', { method: 'DELETE' })
+    lines.value = []
+    if (!auth.isAuthenticated) persistGuest()
+  }
+
+  async function mergeGuest() {
+    const guest = readGuest()
+    const remoteResult = await api('/cart')
+    lines.value = normalizeRemote(remoteResult.data)
+    for (const guestLine of guest) {
+      const product = catalog.findById(guestLine.id)
+      if (!product?.disponible || product.stock <= 0) continue
+      const remote = lines.value.find((line) => line.id === guestLine.id)
+      const cantidad = Math.min((remote?.cantidad || 0) + guestLine.cantidad, product.stock)
+      const result = await api(`/cart/items/${product._id || product.id}`, {
+        method: 'PUT',
+        body: { cantidad },
+      })
+      lines.value = normalizeRemote(result.data)
+    }
+    localStorage.removeItem(GUEST_CART_KEY)
+  }
+
+  function useGuestCart() {
+    lines.value = readGuest()
+  }
+
+  return {
+    lines,
+    items,
+    count,
+    total,
+    loading,
+    error,
+    load,
+    add,
+    setQuantity,
+    remove,
+    clear,
+    mergeGuest,
+    useGuestCart,
+  }
 })

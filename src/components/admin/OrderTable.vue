@@ -1,10 +1,11 @@
 <script setup>
-import { formatPrice } from '../../utils/format'
+import { useCurrencyStore } from '../../stores/currency'
 
 defineProps({
   orders: { type: Array, required: true },
 })
 defineEmits(['status-change', 'view'])
+const currency = useCurrencyStore()
 
 const statuses = ['Pendiente', 'En preparación', 'En camino', 'Entregado']
 </script>
@@ -28,13 +29,13 @@ const statuses = ['Pendiente', 'En preparación', 'En camino', 'Entregado']
           <td>#{{ order.id }}</td>
           <td>{{ order.usuario }}</td>
           <td>{{ order.fecha }}</td>
-          <td>{{ formatPrice(order.total) }}</td>
+          <td>{{ currency.format(order.total) }}</td>
           <td>
             <select
               class="form-select form-select-sm"
               :value="order.estado"
               :aria-label="`Estado de la orden ${order.id}`"
-              @change="$emit('status-change', order.id, $event.target.value)"
+              @change="$emit('status-change', order, $event.target.value)"
             >
               <option v-for="status in statuses" :key="status" :value="status">
                 {{ status }}

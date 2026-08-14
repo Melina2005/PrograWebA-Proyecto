@@ -1,11 +1,9 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import seedProducts from '../data/productos.json'
-import { readStorage, writeStorage } from '../utils/storage'
+import { api } from '../api/client'
 
-const STORAGE_KEY = 'distritoCosmeticoProductos'
-
-const normalizeProduct = (product) => ({
+export const normalizeProduct = (product) => ({
+  _id: String(product._id || ''),
   id: Number(product.id),
   nombre: String(product.nombre || ''),
   categoria: String(product.categoria || ''),
@@ -19,39 +17,65 @@ const normalizeProduct = (product) => ({
 })
 
 export const useCatalogStore = defineStore('catalog', () => {
-  const persisted = readStorage(STORAGE_KEY, null)
-  const source = Array.isArray(persisted) ? persisted : seedProducts
-  const products = ref(source.map(normalizeProduct).filter((product) => product.id > 0))
+  const products = ref([])
   const searchQuery = ref('')
+  const loading = ref(false)
+  const error = ref('')
 
-  const nextId = computed(() => Math.max(0, ...products.value.map((product) => product.id)) + 1)
-
-  function persist() {
-    writeStorage(STORAGE_KEY, products.value)
+  async function load(query = {}) {
+    loading.value = true
+    error.value = ''
+    try {
+      const params = new URLSearchParams(query)
+      const result = await api(`/products${params.size ? `?${params}` : ''}`)
+      products.value = result.data.map(normalizeProduct)
+    } catch (cause) {
+      error.value = cause.message
+    } finally {
+      loading.value = false
+    }
   }
 
   function findById(id) {
-    return products.value.find((product) => product.id === Number(id))
+    return products.value.find((product) => product.id === Number(id) || product._id === String(id))
   }
 
-  function saveProduct(input) {
-    const normalized = normalizeProduct({
-      ...input,
-      id: input.id ? Number(input.id) : nextId.value,
+  async function getDetails(id) {
+    const result = await api(`/products/${id}`)
+    return normalizeProduct(result.data)
+  }
+
+  async function saveProduct(input) {
+    const editing = Boolean(input._id || input.id)
+    const identifier = input._id || input.id
+    const body = { ...input }
+    delete body._id
+    if (!editing) delete body.id
+    const result = await api(editing ? `/products/${identifier}` : '/products', {
+      method: editing ? 'PUT' : 'POST',
+      body,
     })
-    const index = products.value.findIndex((product) => product.id === normalized.id)
-
-    if (index >= 0) products.value[index] = normalized
-    else products.value.push(normalized)
-
-    persist()
-    return normalized
+    const product = normalizeProduct(result.data)
+    const index = products.value.findIndex((item) => item._id === product._id)
+    if (index >= 0) products.value[index] = product
+    else products.value.push(product)
+    return product
   }
 
-  function deleteProduct(id) {
-    products.value = products.value.filter((product) => product.id !== Number(id))
-    persist()
+  async function deleteProduct(product) {
+    await api(`/products/${product._id || product.id}`, { method: 'DELETE' })
+    products.value = products.value.filter((item) => item._id !== product._id)
   }
 
-  return { products, searchQuery, nextId, findById, saveProduct, deleteProduct }
+  return {
+    products,
+    searchQuery,
+    loading,
+    error,
+    load,
+    findById,
+    getDetails,
+    saveProduct,
+    deleteProduct,
+  }
 })

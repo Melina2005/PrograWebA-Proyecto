@@ -1,22 +1,53 @@
 <script setup>
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
 import { useOrdersStore } from '../stores/orders'
-import { assetUrl, formatPrice } from '../utils/format'
+import { useCatalogStore } from '../stores/catalog'
+import { useCurrencyStore } from '../stores/currency'
+import { assetUrl } from '../utils/format'
 
 const router = useRouter()
 const auth = useAuthStore()
 const cart = useCartStore()
 const orders = useOrdersStore()
+const catalog = useCatalogStore()
+const currency = useCurrencyStore()
+const checkoutError = ref('')
+const checkoutLoading = ref(false)
+const delivery = reactive({ telefono: '', direccion: '' })
 
 const imageFallback = (event) => {
   event.target.onerror = null
   event.target.src = assetUrl('data/assets/fallback.webp')
 }
 
-const emptyCart = () => {
-  if (confirm('¿Deseas vaciar el carrito?')) cart.clear()
+const emptyCart = async () => {
+  if (!confirm('¿Deseas vaciar el carrito?')) return
+  try {
+    await cart.clear()
+  } catch (error) {
+    checkoutError.value = error.message
+  }
+}
+
+const updateQuantity = async (id, quantity) => {
+  try {
+    await cart.setQuantity(id, quantity)
+  } catch (error) {
+    checkoutError.value = error.message
+    await cart.load()
+  }
+}
+
+const removeItem = async (id) => {
+  try {
+    await cart.remove(id)
+  } catch (error) {
+    checkoutError.value = error.message
+    await cart.load()
+  }
 }
 
 const checkout = async () => {
@@ -27,10 +58,23 @@ const checkout = async () => {
     return
   }
   if (!confirm('¿Confirmas la compra?')) return
-
-  orders.createOrder(auth.activeUser, cart.items, cart.total)
-  cart.clear()
-  alert('¡Compra realizada exitosamente!')
+  if (!delivery.telefono.trim() || !delivery.direccion.trim()) {
+    checkoutError.value = 'Ingresa un teléfono y una dirección de entrega.'
+    return
+  }
+  checkoutError.value = ''
+  checkoutLoading.value = true
+  try {
+    await orders.createOrder(delivery)
+    await Promise.all([cart.load(), catalog.load()])
+    Object.assign(delivery, { telefono: '', direccion: '' })
+    alert('¡Compra realizada exitosamente!')
+  } catch (error) {
+    checkoutError.value = error.message
+    await Promise.all([cart.load(), catalog.load()])
+  } finally {
+    checkoutLoading.value = false
+  }
 }
 </script>
 
@@ -71,14 +115,14 @@ const checkout = async () => {
                     />
                     <span>{{ item.product.nombre }}</span>
                   </td>
-                  <td>{{ formatPrice(item.product.precio) }}</td>
+                  <td>{{ currency.format(item.product.precio) }}</td>
                   <td>
                     <div class="input-group input-group-sm cart-quantity">
                       <button
                         type="button"
                         class="btn btn-outline-secondary"
                         :aria-label="`Disminuir cantidad de ${item.product.nombre}`"
-                        @click="cart.setQuantity(item.id, item.cantidad - 1)"
+                        @click="updateQuantity(item.id, item.cantidad - 1)"
                       >
                         −
                       </button>
@@ -93,18 +137,18 @@ const checkout = async () => {
                         class="btn btn-outline-secondary"
                         :disabled="item.cantidad >= item.product.stock"
                         :aria-label="`Aumentar cantidad de ${item.product.nombre}`"
-                        @click="cart.setQuantity(item.id, item.cantidad + 1)"
+                        @click="updateQuantity(item.id, item.cantidad + 1)"
                       >
                         +
                       </button>
                     </div>
                   </td>
-                  <td>{{ formatPrice(item.product.precio * item.cantidad) }}</td>
+                  <td>{{ currency.format(item.product.precio * item.cantidad) }}</td>
                   <td>
                     <button
                       type="button"
                       class="btn btn-sm btn-outline-danger"
-                      @click="cart.remove(item.id)"
+                      @click="removeItem(item.id)"
                     >
                       Eliminar
                     </button>
@@ -117,14 +161,40 @@ const checkout = async () => {
           <hr />
           <div class="d-flex justify-content-end align-items-center gap-3">
             <h4 class="mb-0">Total:</h4>
-            <h4 class="mb-0">{{ formatPrice(cart.total) }}</h4>
+            <h4 class="mb-0">{{ currency.format(cart.total) }}</h4>
           </div>
+          <div v-if="auth.isAuthenticated" class="row g-3 mt-3">
+            <div class="col-md-4">
+              <label for="checkoutPhone" class="form-label">Teléfono</label>
+              <input
+                id="checkoutPhone"
+                v-model.trim="delivery.telefono"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="col-md-8">
+              <label for="checkoutAddress" class="form-label">Dirección de entrega</label>
+              <input
+                id="checkoutAddress"
+                v-model.trim="delivery.direccion"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div v-if="checkoutError" class="alert alert-danger mt-3 mb-0">{{ checkoutError }}</div>
           <div class="d-flex flex-column flex-md-row gap-3 mt-4">
             <button type="button" class="btn btn-outline-danger flex-fill" @click="emptyCart">
               Vaciar carrito
             </button>
-            <button type="button" class="btn btn-success flex-fill" @click="checkout">
-              Finalizar compra
+            <button
+              type="button"
+              class="btn btn-success flex-fill"
+              :disabled="checkoutLoading"
+              @click="checkout"
+            >
+              {{ checkoutLoading ? 'Procesando...' : 'Finalizar compra' }}
             </button>
           </div>
         </template>

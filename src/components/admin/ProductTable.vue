@@ -1,10 +1,11 @@
 <script setup>
-import { formatPrice } from '../../utils/format'
+import { useCurrencyStore } from '../../stores/currency'
 
 defineProps({
   products: { type: Array, required: true },
 })
 defineEmits(['edit', 'delete'])
+const currency = useCurrencyStore()
 
 const badge = (product) => {
   if (!product.disponible || product.stock === 0) return { className: 'bg-danger', text: 'Agotado' }
@@ -30,7 +31,7 @@ const badge = (product) => {
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.nombre }}</td>
           <td>{{ product.categoria }}</td>
-          <td>{{ formatPrice(product.precio) }}</td>
+          <td>{{ currency.format(product.precio) }}</td>
           <td>{{ product.stock }}</td>
           <td>
             <span class="badge" :class="badge(product).className">{{ badge(product).text }}</span>

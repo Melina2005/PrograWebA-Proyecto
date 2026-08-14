@@ -1,17 +1,21 @@
 <script setup>
-import { computed } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import OrderCard from '../components/account/OrderCard.vue'
 import { useAuthStore } from '../stores/auth'
 import { useOrdersStore } from '../stores/orders'
+import { useCartStore } from '../stores/cart'
 
 const auth = useAuthStore()
 const orders = useOrdersStore()
 const router = useRouter()
-const userOrders = computed(() => orders.byEmail(auth.activeUser?.correo || ''))
+const cart = useCartStore()
+
+onMounted(() => orders.loadForUser(auth.activeUser.id))
 
 const logout = async () => {
   auth.logout()
+  cart.useGuestCart()
   await router.push('/login')
 }
 </script>
@@ -57,7 +61,7 @@ const logout = async () => {
           <div class="card-body">
             <h5 class="fw-bold mb-4"><i class="bi bi-box-seam me-2"></i>Mis Pedidos</h5>
             <div
-              v-if="userOrders.length === 0"
+              v-if="!orders.loading && orders.orders.length === 0"
               class="alert alert-light border rounded-4 text-center"
             >
               <h5 class="mb-2">Aún no has realizado compras</h5>
@@ -65,7 +69,9 @@ const logout = async () => {
                 Cuando finalices una compra aparecerá aquí el historial de tus pedidos.
               </p>
             </div>
-            <OrderCard v-for="order in userOrders" v-else :key="order.id" :order="order" />
+            <p v-if="orders.loading" class="text-center text-muted">Cargando pedidos...</p>
+            <div v-else-if="orders.error" class="alert alert-danger">{{ orders.error }}</div>
+            <OrderCard v-for="order in orders.orders" v-else :key="order.id" :order="order" />
           </div>
         </div>
       </div>

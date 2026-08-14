@@ -1,10 +1,12 @@
 <script setup>
-import { assetUrl, formatPrice } from '../../utils/format'
+import { assetUrl } from '../../utils/format'
+import { useCurrencyStore } from '../../stores/currency'
 
 defineProps({
   product: { type: Object, required: true },
 })
 const emit = defineEmits(['select'])
+const currency = useCurrencyStore()
 
 const imageFallback = (event) => {
   event.target.onerror = null
@@ -27,6 +29,6 @@ const imageFallback = (event) => {
     </div>
     <h6 class="text-truncate mb-1">{{ product.nombre }}</h6>
     <small class="d-block text-truncate mb-auto">{{ product.descripcion }}</small>
-    <p class="fw-bold mt-2 mb-1">{{ formatPrice(product.precio) }}</p>
+    <p class="fw-bold mt-2 mb-1">{{ currency.format(product.precio) }}</p>
   </article>
 </template>

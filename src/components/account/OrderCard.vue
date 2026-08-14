@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
-import { formatPrice } from '../../utils/format'
+import { useCurrencyStore } from '../../stores/currency'
 
 const props = defineProps({
   order: { type: Object, required: true },
 })
+const currency = useCurrencyStore()
 
 const badge = computed(
   () =>
@@ -35,13 +36,13 @@ const badge = computed(
           class="d-flex justify-content-between gap-3"
         >
           <span>{{ product.cantidad }} × {{ product.nombre }}</span>
-          <span>{{ formatPrice(product.precio * product.cantidad) }}</span>
+          <span>{{ currency.format(product.precio * product.cantidad) }}</span>
         </div>
       </div>
       <hr />
       <div class="d-flex justify-content-between">
         <strong>Total</strong>
-        <strong>{{ formatPrice(order.total) }}</strong>
+        <strong>{{ currency.format(order.total) }}</strong>
       </div>
     </div>
   </div>

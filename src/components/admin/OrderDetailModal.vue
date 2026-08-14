@@ -1,11 +1,12 @@
 <script setup>
 import AppModal from '../common/AppModal.vue'
-import { formatPrice } from '../../utils/format'
+import { useCurrencyStore } from '../../stores/currency'
 
 defineProps({
   order: { type: Object, default: null },
 })
 const emit = defineEmits(['close'])
+const currency = useCurrencyStore()
 </script>
 
 <template>
@@ -44,15 +45,15 @@ const emit = defineEmits(['close'])
           <tbody>
             <tr v-for="(product, index) in order.productos" :key="`${order.id}-${index}`">
               <td>{{ product.nombre }}</td>
-              <td>{{ formatPrice(product.precio) }}</td>
+              <td>{{ currency.format(product.precio) }}</td>
               <td>{{ product.cantidad }}</td>
-              <td>{{ formatPrice(product.precio * product.cantidad) }}</td>
+              <td>{{ currency.format(product.precio * product.cantidad) }}</td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="3" class="text-end fw-bold">Total</td>
-              <td class="fw-bold">{{ formatPrice(order.total) }}</td>
+              <td class="fw-bold">{{ currency.format(order.total) }}</td>
             </tr>
           </tfoot>
         </table>

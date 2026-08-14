@@ -1,55 +1,81 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { readStorage, writeStorage } from '../utils/storage'
+import { api, SESSION_KEY } from '../api/client'
 
-const USERS_KEY = 'usuarios'
-const ACTIVE_USER_KEY = 'usuarioActivo'
-
-const validUser = (user) =>
-  user &&
-  typeof user.nombre === 'string' &&
-  typeof user.correo === 'string' &&
-  typeof user.password === 'string'
+const readSession = () => {
+  try {
+    const value = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null')
+    return value?.token && value?.user ? value : null
+  } catch {
+    return null
+  }
+}
 
 export const useAuthStore = defineStore('auth', () => {
-  const storedUsers = readStorage(USERS_KEY, [])
-  const users = ref(Array.isArray(storedUsers) ? storedUsers.filter(validUser) : [])
-  const storedActiveUser = readStorage(ACTIVE_USER_KEY, null)
-  const activeUser = ref(validUser(storedActiveUser) ? storedActiveUser : null)
+  const stored = readSession()
+  const activeUser = ref(stored?.user || null)
+  const token = ref(stored?.token || '')
+  const loading = ref(false)
+  const isAuthenticated = computed(() => Boolean(token.value && activeUser.value))
+  const isAdmin = computed(() => activeUser.value?.rol === 'admin')
+  const firstName = computed(() => activeUser.value?.nombre?.split(' ')[0] || 'Invitado')
 
-  const isAuthenticated = computed(() => Boolean(activeUser.value))
-  const firstName = computed(() => activeUser.value?.nombre.split(' ')[0] || 'Invitado')
-
-  function login(correo, password) {
-    const user = users.value.find(
-      (candidate) => candidate.correo === correo && candidate.password === password,
-    )
-    if (!user) return { ok: false, message: 'Correo o contraseña incorrectos.' }
-
-    activeUser.value = user
-    writeStorage(ACTIVE_USER_KEY, user)
-    return { ok: true }
+  const saveSession = (payload) => {
+    activeUser.value = payload.user
+    token.value = payload.token
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ user: payload.user, token: payload.token }))
   }
 
-  function register({ nombre, correo, password }) {
-    if (users.value.some((user) => user.correo === correo)) {
-      return { ok: false, message: 'Este correo ya está registrado.', type: 'warning' }
+  async function login(correo, password) {
+    loading.value = true
+    try {
+      const result = await api('/auth/login', { method: 'POST', body: { correo, password } })
+      saveSession(result)
+      return { ok: true }
+    } catch (error) {
+      return { ok: false, message: error.message }
+    } finally {
+      loading.value = false
     }
+  }
 
-    const user = { nombre, correo, password }
-    users.value.push(user)
-    writeStorage(USERS_KEY, users.value)
-    return {
-      ok: true,
-      message: 'Cuenta creada correctamente. Ahora puedes iniciar sesión.',
-      type: 'success',
+  async function register({ nombre, correo, password }) {
+    loading.value = true
+    try {
+      await api('/auth/register', { method: 'POST', body: { nombre, correo, password } })
+      return {
+        ok: true,
+        message: 'Cuenta creada correctamente. Ahora puedes iniciar sesión.',
+        type: 'success',
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        message: error.message,
+        type: error.status === 409 ? 'warning' : 'danger',
+      }
+    } finally {
+      loading.value = false
     }
   }
 
   function logout() {
     activeUser.value = null
-    localStorage.removeItem(ACTIVE_USER_KEY)
+    token.value = ''
+    localStorage.removeItem(SESSION_KEY)
   }
 
-  return { users, activeUser, isAuthenticated, firstName, login, register, logout }
+  window.addEventListener('api:unauthorized', logout)
+
+  return {
+    activeUser,
+    token,
+    loading,
+    isAuthenticated,
+    isAdmin,
+    firstName,
+    login,
+    register,
+    logout,
+  }
 })

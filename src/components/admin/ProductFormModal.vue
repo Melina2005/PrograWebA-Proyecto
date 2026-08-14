@@ -5,10 +5,12 @@ import AppModal from '../common/AppModal.vue'
 const props = defineProps({
   open: { type: Boolean, required: true },
   product: { type: Object, default: null },
+  categories: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save'])
 const formElement = ref(null)
 const form = reactive({
+  _id: '',
   id: null,
   nombre: '',
   categoria: 'Maquillaje',
@@ -26,6 +28,7 @@ watch(
   ([open]) => {
     if (!open) return
     Object.assign(form, {
+      _id: props.product?._id || '',
       id: props.product?.id || null,
       nombre: props.product?.nombre || '',
       categoria: props.product?.categoria || 'Maquillaje',
@@ -48,6 +51,16 @@ const submit = () => {
   }
   emit('save', { ...form, precio: Number(form.precio), stock: Number(form.stock) })
 }
+
+watch(
+  () => props.categories,
+  (categories) => {
+    if (!props.product && !categories.some((item) => item.nombre === form.categoria)) {
+      form.categoria = categories.find((item) => item.activa)?.nombre || ''
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -73,11 +86,12 @@ const submit = () => {
         <div class="mb-3">
           <label for="adminProductCategory" class="form-label">Categoría</label>
           <select id="adminProductCategory" v-model="form.categoria" class="form-select" required>
-            <option>Maquillaje</option>
-            <option>Skincare</option>
-            <option>Cabello</option>
-            <option>Fragancias</option>
-            <option>Corporal</option>
+            <option
+              v-for="category in categories.filter((item) => item.activa)"
+              :key="category._id"
+            >
+              {{ category.nombre }}
+            </option>
           </select>
         </div>
         <div class="mb-3">
